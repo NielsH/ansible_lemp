@@ -1,0 +1,35 @@
+---
+
+- name: Ensure nginx group is present
+  group: name={{ nginx_user }} system=yes state=present
+
+- name: Ensure nginx user is present
+  user:
+    name={{ nginx_user }}
+    group={{ nginx_user }}
+    home="/nonexistent"
+    shell="/bin/false"
+    system=yes
+
+- name: Ensure nginx vhost primary groups are present
+  group: name={{ item.primary_group }} state=present
+  with_items: "{{ users }}"
+
+- name: Ensure nginx vhost secondary_groups are present
+  group: name={{ item.1 }}
+  with_subelements:
+    - users
+    - secondary_groups
+
+- name: Ensure nginx vhost users are present
+  user:
+    name={{ item.username }}
+    password={{ item.password_hash }}
+    group={{ item.primary_group }}
+    groups={{ item.secondary_groups | join(",") }}
+    shell={{ item.shell }}
+    home={{ item.homedir }}
+    createhome=no
+    state=present
+  with_items: "{{ users }}"
+

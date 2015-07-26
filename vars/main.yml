@@ -1,0 +1,14 @@
+---
+
+# Nginx
+nginx_user: "nginx"
+nginx_vhost_path: /etc/nginx/sites-enabled
+nginx_config_path: /etc/nginx/nginx.conf
+
+# php5-fpm
+php_config_path: /etc/php5/fpm/php-fpm.conf
+php_vhost_path: /etc/php5/fpm/pool.d
+
+# mysql
+mysql_root_password: "password5"
+mysql_config_path: /etc/mysql/my.cnf

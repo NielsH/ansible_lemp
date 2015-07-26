@@ -1,0 +1,33 @@
+---
+
+- name: Install php5-fpm
+  apt: pkg={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - php5-fpm
+    - php5-gd
+    - php5-curl
+    - php5-mcrypt
+    - php5-mysqlnd
+    - php5-readline
+    - php5-memcache
+
+- name: Ensure default php5-fpm pool is absent
+  file: path={{ php_vhost_path }}/www.conf state=absent
+
+- name: Ensure main php5-fpm configuration is up-to-date
+  template:
+    src: php5-fpm/php-fpm.conf.j2
+    dest: "{{ php_config_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart php5-fpm
+
+- name: Add php5-fpm vhost configuration
+  template:
+    src: php5-fpm/vhosts.j2
+    dest: "{{ php_vhost_path }}/vhosts.conf"
+    mode: 0644
+  when: nginx_vhosts
+  notify: restart php5-fpm
+

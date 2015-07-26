@@ -1,0 +1,31 @@
+---
+
+# nginx
+- name: start nginx
+  service: name=nginx state=started
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+
+- name: restart nginx
+  service: name=nginx state=restarted
+
+# php5-fpm
+- name: start php5-fpm
+  service: name=php5-fpm state=started
+
+- name: reload php5-fpm
+  service: name=php5-fpm state=reloaded
+
+- name: restart php5-fpm
+  service: name=php5-fpm state=restarted
+
+# mysql
+- name: start mysql
+  service: name=mysql state=started
+
+- name: reload mysql
+  service: name=mysql state=reloaded
+
+- name: restart mysql
+  service: name=mysql state=restarted

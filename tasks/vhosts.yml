@@ -1,0 +1,32 @@
+---
+
+- name: Ensure nginx vhost path is present
+  file: dest={{ nginx_vhost_path }} mode=755 state=directory owner=root group=root
+
+- name: Ensure nginx vhost basedir is present
+  file: dest={{ nginx_vhost_basedir }} mode=755 state=directory owner=root group=root
+
+- name: Ensure nginx vhost domain directories are present
+  file: dest={{ item.basedir }} mode=751 state=directory owner=root group={{ item.user }}
+  with_items: "{{ nginx_vhosts }}"
+
+- name: Ensure nginx vhost public_html directories are present
+  file: dest={{ item.root }} mode=750 state=directory owner={{ item.user }} group={{ nginx_user }}
+  with_items: "{{ nginx_vhosts }}"
+
+- name: Ensure nginx vhost tmp directories are present
+  file: dest={{ item.tmp }} mode=750 state=directory owner={{ item.user }} group={{ nginx_user }}
+  with_items: "{{ nginx_vhosts }}"
+
+- name: Ensure nginx vhost log directories are present
+  file: dest={{ item.logdir }} mode=750 state=directory owner={{ item.user }} group={{ nginx_user }}
+  with_items: "{{ nginx_vhosts }}"
+
+- name: Add nginx vhost configurations
+  template:
+    src: nginx/vhosts.j2
+    dest: "{{ nginx_vhost_path }}/vhosts.conf"
+    mode: 0644
+  when: nginx_vhosts
+  notify: restart nginx
+

@@ -1,0 +1,23 @@
+{% for vhost in nginx_vhosts %}
+[{{ vhost.user }}]
+user = {{ vhost.user }}
+group = {{ vhost.user }}
+listen = {{ vhost.tmp }}/php-fpm-{{ vhost.user }}.sock
+listen.owner = {{ vhost.user }}
+listen.group = {{ nginx_user }}
+listen.mode = 0660
+pm = dynamic
+pm.max_children = 9
+pm.start_servers = 3
+pm.min_spare_servers = 2
+pm.max_spare_servers = 3
+pm.max_requests = 500
+chdir = /
+php_admin_value[open_basedir] = {{ vhost.root }}
+php_admin_value[disable_functions] = chgrp, show_source, allow_url_fopen, exec, popen, pclose, php_eval, safe_dir, root, ftok, posix_access, egy_perl, symlink, set_time_limit, ini_restore, shell_exec, passthru, ini_alter, openlog, syslog, readlink, link, leak, escapeshellcmd, proc_close, proc_get_status, proc_nice, proc_open, proc_terminate, pcntl_exec, wscript, apache_child_terminate, apache_setenv, define_syslog_variables, escapeshellarg, escapeshellcmd, exec, fp, highlight_file, ini_get_all, inject_code, mysql_pconnect, php_uname, phpAds_remoteInfo, phpAds_XmlRpc, phpAds_xmlrpcDecode, phpAds_xmlrpcEncode, posix_getpwuid, posix_kill, posix_mkfifo, posix_setpgid, posix_setsid, posix_setuid, posix_setuid, posix_uname, proc_close, proc_get_status, proc_terminate, system, xmlrpc_entity_decode, fput, ftp_connect, ftp_exec, ftp_get, ftp_login, ftp_nb_fput, ftp_put, ftp_raw, ftp_rawlist, dl, curl_exec, curl_init, ini_restore, mail
+php_admin_value[allow_url_fopen]=0
+php_flag[expose_php] = off
+php_value[memory_limit] = 64M
+php_admin_value[upload_tmp_dir] = "{{ vhost.tmp }}"
+security.limit_extensions = .php .php5
+{% endfor %}

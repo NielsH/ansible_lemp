@@ -1,0 +1,27 @@
+---
+
+nginx_vhost_basedir: "/srv/www"
+
+nginx_vhosts:
+  - {
+    user: "nuvini",
+    server_name: "ansible.nuvini.com",
+    root: "/srv/www/ansible.nuvini.com/public_html",
+    tmp: "/srv/www/ansible.nuvini.com/tmp",
+    basedir: "{{ nginx_vhost_basedir }}/ansible.nuvini.com",
+    logdir: "{{ nginx_vhost_basedir }}/ansible.nuvini.com/logs",
+    access_log: "{{ nginx_vhost_basedir }}/ansible.nuvini.com/logs/access.log",
+    error_log: "{{ nginx_vhost_basedir }}/ansible.nuvini.com/logs/error.log",
+  }
+
+# Be careful with passwords here
+# The ones uploaded to git should not be important
+users:
+  - {
+    username: "nuvini",
+    password_hash: "$6$gPRy6PfdUsQsj$cP3JbUR4ARIdD0T5R5/rYzAqIJz4ojfQy9DfN7d8ZwJ2F5tWlQ7G/V4kA3A4uCkVTzyudeHDZ9YJDONZzAbYn1",
+    primary_group: "nuvini",
+    secondary_groups: [],
+    shell: "/bin/bash",
+    homedir: "/srv/www/ansible.nuvini.com",
+  }
